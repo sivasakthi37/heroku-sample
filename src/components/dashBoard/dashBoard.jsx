@@ -154,6 +154,7 @@ class PersistentDrawerLeft extends React.Component {
                     });
                   }}
                 />
+                
               </span>
             </div>
           </Toolbar>
