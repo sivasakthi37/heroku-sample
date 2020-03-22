@@ -116,7 +116,7 @@ class PersistentDrawerLeft extends React.Component {
     const { open } = this.state;
     const { anchorEl } = this.state;
     console.log("this", this.state);
-
+    let { imageUrl, email, name } = this.props.user.profileObj;
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -144,7 +144,7 @@ class PersistentDrawerLeft extends React.Component {
                 <Avatar
                   aria-owns={this.state.popover ? "simple-popper" : undefined}
                   alt="Remy Sharp"
-                  src="/static/images/avatar/1.jpg"
+                  src={imageUrl}
                   className={classes.bigAvatar}
                   style={{ cursor: "pointer" }}
                   onClick={event => {
@@ -154,7 +154,6 @@ class PersistentDrawerLeft extends React.Component {
                     });
                   }}
                 />
-
               </span>
             </div>
           </Toolbar>
@@ -278,7 +277,12 @@ class PersistentDrawerLeft extends React.Component {
           }}
         >
           <Typography className={classes.typography}>
-            The content of the Popover.
+            <div>
+              <div>Email:{email}</div>
+              <div>Name:{name}</div>
+            </div>
+            <Divider />
+            <div onClick={() => {}}>Logout</div>
           </Typography>
         </Popover>
       </div>
