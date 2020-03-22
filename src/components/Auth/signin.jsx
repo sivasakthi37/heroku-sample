@@ -23,7 +23,7 @@ class Signin extends Component {
         <h1> signin</h1>
 
         <GoogleLogin
-          clientId="885560216033-gj57o462hm7mbab6kf3sf8kqepf55q0o.apps.googleusercontent.com"
+          clientId="885560216033-2lgci89m84tp1jivmb198itnratpp3vq.apps.googleusercontent.com"
           buttonText="Login"
           onSuccess={this.responseGoogle}
           onFailure={this.responseGoogle}
