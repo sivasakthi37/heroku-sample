@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { Select, Table, Layout, Menu, Icon } from "antd";
+import React from "react";
+// import { Select, Table, Layout, Menu, Icon } from "antd";
 import { connect } from "react-redux";
 import { deleteData } from "../../stateManager/actions/index";
-import axios from "axios";
+// import axios from "axios";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
@@ -154,7 +154,7 @@ class PersistentDrawerLeft extends React.Component {
                     });
                   }}
                 />
-                
+
               </span>
             </div>
           </Toolbar>

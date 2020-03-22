@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Button, Input } from "antd";
+// import { Link } from "react-router-dom";
+// import { Button, Input } from "antd";
 import { connect } from "react-redux";
 import { userdata } from "../../stateManager/actions";
-import axios from "axios";
+// import axios from "axios";
 import { GoogleLogin } from "react-google-login";
 
 class Signin extends Component {
