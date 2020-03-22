@@ -29,3 +29,10 @@ export const deleteData = data => {
     data
   };
 };
+
+export const addData = data => {
+  return {
+    type: "ADD_DATA",
+    data
+  };
+};

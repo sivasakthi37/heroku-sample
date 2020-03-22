@@ -40,7 +40,6 @@ class FormDialog extends React.Component {
   };
   render() {
     console.log("this.dialog", this.props);
-
     return (
       <div>
         <Dialog

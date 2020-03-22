@@ -45,12 +45,18 @@ export default (state = initialState, action) => {
         a => a.id !== action.data.id
       );
 
-      console.log("finalValue", newstate);
-
       return {
         ...state,
         [productNameDelete]: newstate
       };
+    case type.ADD_DATA:
+      console.log("adddata", action.data);
+      let productNameAdd = action.data.product.replace(/\s/g, "");
+      return {
+        ...state,
+        [productNameAdd]: [action.data, ...state[productNameAdd]]
+      };
+
     default:
       return state;
   }

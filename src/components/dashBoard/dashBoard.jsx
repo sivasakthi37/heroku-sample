@@ -1,7 +1,7 @@
 import React from "react";
 // import { Select, Table, Layout, Menu, Icon } from "antd";
 import { connect } from "react-redux";
-import { deleteData } from "../../stateManager/actions/index";
+import { deleteData, addData } from "../../stateManager/actions/index";
 // import axios from "axios";
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -28,6 +28,18 @@ import Avatar from "@material-ui/core/Avatar";
 import FormDialog from "./dialog";
 import Popover from "@material-ui/core/Popover";
 
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -47,6 +59,14 @@ const styles = theme => ({
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen
     })
+  },
+  button: {
+    display: "block",
+    marginTop: theme.spacing.unit * 2
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120
   },
   menuButton: {
     marginLeft: 12,
@@ -100,7 +120,8 @@ class PersistentDrawerLeft extends React.Component {
     open: true,
     selectProduct: "",
     openDialog: false,
-    dialogData: {}
+    dialogData: {},
+    addDataOpenDialog: false
   };
 
   handleDrawerOpen = () => {
@@ -115,7 +136,8 @@ class PersistentDrawerLeft extends React.Component {
     const { classes, theme } = this.props;
     const { open } = this.state;
     const { anchorEl } = this.state;
-    console.log("this", this.state);
+    console.log("this", this.props);
+
     let { imageUrl, email, name } = this.props.user.profileObj;
     return (
       <div className={classes.root}>
@@ -141,19 +163,21 @@ class PersistentDrawerLeft extends React.Component {
 
             <div style={{ marginLeft: "86%" }}>
               <span>
-                <Avatar
-                  aria-owns={this.state.popover ? "simple-popper" : undefined}
-                  alt="Remy Sharp"
-                  src={imageUrl}
-                  className={classes.bigAvatar}
-                  style={{ cursor: "pointer" }}
-                  onClick={event => {
-                    this.setState({
-                      popover: true,
-                      anchorEl: event.currentTarget
-                    });
-                  }}
-                />
+                {imageUrl && (
+                  <Avatar
+                    aria-owns={this.state.popover ? "simple-popper" : undefined}
+                    alt={name && name.charAt(0)}
+                    src={imageUrl && imageUrl}
+                    className={classes.bigAvatar}
+                    style={{ cursor: "pointer" }}
+                    onClick={event => {
+                      this.setState({
+                        popover: true,
+                        anchorEl: event.currentTarget
+                      });
+                    }}
+                  />
+                )}
               </span>
             </div>
           </Toolbar>
@@ -177,7 +201,17 @@ class PersistentDrawerLeft extends React.Component {
             </IconButton>
           </div>
           <Divider />
+
           <List>
+            <ListItem button>
+              <ListItemIcon>+</ListItemIcon>
+              <ListItemText
+                primary={"ADD PRODUCT"}
+                onClick={() => {
+                  this.setState({ addDataOpenDialog: true });
+                }}
+              />
+            </ListItem>
             {["Product1", "Product2", "Product3"].map((text, index) => (
               <ListItem button key={index}>
                 <ListItemIcon>
@@ -258,6 +292,14 @@ class PersistentDrawerLeft extends React.Component {
                 }}
               />
             )}
+
+            <AddDataFormDialog
+              opendialog={this.state.addDataOpenDialog}
+              closedialog={() => {
+                this.setState({ addDataOpenDialog: false });
+              }}
+              addData={this.props.addData}
+            />
           </div>
         </main>
         <Popover
@@ -278,8 +320,8 @@ class PersistentDrawerLeft extends React.Component {
         >
           <Typography className={classes.typography}>
             <div>
-              <div>Email:{email}</div>
-              <div>Name:{name}</div>
+              <div>Email:{email && email}</div>
+              <div>Name:{name && name}</div>
             </div>
             <Divider />
             <div onClick={() => {}}>Logout</div>
@@ -308,5 +350,111 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { deleteData }
+  { deleteData, addData }
 )(ComponenentWithStyle);
+
+class AddDataFormDialog extends React.Component {
+  state = {
+    customer_name: "",
+    customer_email: "",
+    quantity: "",
+    id: "",
+    product: ""
+  };
+
+  save = () => {
+    let data = {
+      id: new Date().getUTCMilliseconds(),
+      customer_name: this.state.customer_name,
+      customer_email: this.state.customer_email,
+      product: this.state.product,
+      quantity: this.state.quantity
+    };
+    this.props.addData(data);
+    this.props.closedialog();
+  };
+  handleChange = data => {
+    console.log("data", data);
+    this.setState({ product: data.target.value });
+  };
+  render() {
+    console.log("this.dialog", this.props);
+
+    return (
+      <div>
+        <Dialog
+          open={this.props.opendialog}
+          onClose={this.closedialog}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogTitle id="form-dialog-title">Add data</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{}</DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Customer Name"
+              type="string"
+              fullWidth
+              onChange={e => {
+                console.log("eeeeeeee", e.target.value);
+
+                this.setState({ customer_name: e.target.value }, () => {});
+              }}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="Email"
+              label="Customer Email"
+              type="email"
+              fullWidth
+              onChange={e => {
+                this.setState({ customer_email: e.target.value });
+              }}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="Email"
+              label="Quantity"
+              type="string"
+              fullWidth
+              onChange={e => {
+                this.setState({ quantity: e.target.value });
+              }}
+            />
+            <form autoComplete="off">
+              <FormControl style={{ width: "100%" }}>
+                <InputLabel htmlFor="demo-controlled-open-select">
+                  Product
+                </InputLabel>
+                <Select
+                  style={{ width: "100%" }}
+                  onChange={this.handleChange}
+                  inputProps={{
+                    name: "Product",
+                    id: "demo-controlled-open-select"
+                  }}
+                >
+                  <MenuItem value={"Product 1"}>Product 1</MenuItem>
+                  <MenuItem value={"Product 2"}>Product 2</MenuItem>
+                  <MenuItem value={"Product 3"}>Product 3</MenuItem>
+                </Select>
+              </FormControl>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.props.closedialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.save} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
+}
